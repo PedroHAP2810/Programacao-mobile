@@ -4,7 +4,7 @@ import { StyleSheet, Text, View, Button, Image, ScrollView, SafeAreaView } from 
 export default function App() {
 
   function alerta() {
-    console.log("Gol do Cruzeiro!")
+    alert("Gol do Cabuloso !!!")
   }
   
   return (
