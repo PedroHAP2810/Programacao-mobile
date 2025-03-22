@@ -10,7 +10,7 @@ export default function App() {
   return (
 
     <ScrollView>
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <Text style={{fontSize: 50, fontStyle:'italic'}}>Cruzeiro!</Text>
       <Text>Maior de Minas</Text>
       <Image
@@ -93,7 +93,7 @@ export default function App() {
       <Text>Líder em desarmes na Copa do Brasil 2025</Text>
 
       <StatusBar style="auto" />
-    </SafeAreaView>
+    </View>
     </ScrollView>
   );
 }
