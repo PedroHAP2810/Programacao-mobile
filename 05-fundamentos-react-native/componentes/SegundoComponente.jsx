@@ -1,7 +1,8 @@
+
 import React from "react";
-import {Text} from 'react-native'
+import { Text } from 'react-native';
 
 export default function SegundoComponente() {
-  
-    return <Text>Segundo Componente</Text>
+
+  return <Text>Segundo Componente</Text>
 }

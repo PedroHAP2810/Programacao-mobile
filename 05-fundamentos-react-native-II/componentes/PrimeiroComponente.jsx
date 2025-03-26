@@ -1,11 +1,10 @@
-
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 
-export default function TerceiroComponente() {
+export default function PrimeiroComponente() {
   return (
     <View>
-      <Text>TerceiroComponente</Text>
+      <Text>PrimeiroComponente</Text>
     </View>
   )
 }
