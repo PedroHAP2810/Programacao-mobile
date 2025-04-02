@@ -20,7 +20,7 @@ export default function Filme(props) {
           uri: capa
         }}
         style={{
-          height: 500,
+          height: 400,
           width: 300
         }}
       />
