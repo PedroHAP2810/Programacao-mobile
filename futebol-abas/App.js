@@ -26,6 +26,10 @@ export default function App() {
           },
           tabBarInactiveTintColor: 'gray',
           tabBarActiveTintColor: 'blue',
+          tabBarLabelStyle: {
+            fontFamily: 'Verdana',
+            fontSize: 14,            
+          },
           tabBarIcon: ({ color, size}) => <Ionicons name='search' color={color} size={size} />
         }}
         />
@@ -41,6 +45,10 @@ export default function App() {
           },
           tabBarInactiveTintColor: 'gray',
           tabBarActiveTintColor: 'blue',
+          tabBarLabelStyle: {
+            fontFamily: 'Verdana',
+            fontSize: 14,            
+          },
           tabBarIcon: ({ color, size}) => <Ionicons name='football' color={color} size={size} />
         }}
         
@@ -57,6 +65,10 @@ export default function App() {
           },
           tabBarInactiveTintColor: 'gray',
           tabBarActiveTintColor: 'blue',
+          tabBarLabelStyle: {
+            fontFamily: 'Verdana',
+            fontSize: 14,            
+          },
           tabBarIcon: ({ color, size}) => <Ionicons name='trophy-sharp' color={color} size={size} />
         }}
         
