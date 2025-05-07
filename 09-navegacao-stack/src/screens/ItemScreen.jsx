@@ -22,7 +22,7 @@ export default function ItemScreen({ navigation, route}) {
             mode='contained-tonal'
             icon='aroow-left'
             onPress={() => navigation.goBack()}>
-                Voltar
+                Voltar              
             </Button>
         </Card.Actions>
       </Card>
