@@ -1,20 +1,62 @@
+
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import {PaperProvider} from 'react-native-paper'
+import {NavigationContainer} from '@react-navigation/native'
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
+import {Ionicons} from "@expo/vector-icons"
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+
+import MegaSenaScreen from './Componentes/screens/MegaSenaScreen';
+import JogoDoBichoScreen from './Componentes/screens/JogoDoBichoScreen';
+
+const tab = createBottomTabNavigator()
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <PaperProvider>
+      <NavigationContainer>
+        <tab.Navigator>
+
+          <tab.Screen  
+          name='MegaSenaScreen'
+           component={MegaSenaScreen}
+           options={{
+             headerTitleAlign: 'center',
+              headerStyle: {
+                backgroundColor: 'green'
+              },
+              tabBarInactiveBackgroundColor: 'black',
+              tabBarActiveBackgroundColor: 'green',
+            title : "Mega-Sena",
+
+          
+            tabBarIcon: ({color, size}) => <MaterialIcons name="monetization-on" size={size} color={color} /> 
+
+           }}
+           
+           />
+
+           <tab.Screen 
+           name='JogoDoBichoScreen'
+           component={JogoDoBichoScreen}
+           options={{
+            title: "Jogo Do Bicho",
+             headerTitleAlign: 'center',
+              headerStyle: {
+                backgroundColor: 'blue'
+              },
+              tabBarInactiveBackgroundColor: 'black',
+              tabBarActiveBackgroundColor: 'blue',
+               tabBarIcon: ({color, size}) => <Ionicons name='megaphone-outline' color={color} size={size} />
+
+           
+           }}
+           
+           />
+
+
+        </tab.Navigator>
+      </NavigationContainer>
+    </PaperProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
