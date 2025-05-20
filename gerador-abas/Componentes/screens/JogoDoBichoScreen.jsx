@@ -1,11 +1,9 @@
-
 import { StyleSheet, View } from "react-native";
 import React from "react";
 import { Card, Text, Button } from "react-native-paper";
 import { useState } from "react";
 
 export default function JogoDoBichoScreen() {
-
   const animais = [
     {
       numero: 1,
@@ -46,7 +44,6 @@ export default function JogoDoBichoScreen() {
     {
       numero: 7,
       nome: "Carneiro",
-
       imagem:
         "https://i.pinimg.com/736x/ce/c4/e6/cec4e6c3f16a63f9a713267ffcf9e114.jpg",
     },
@@ -71,32 +68,68 @@ export default function JogoDoBichoScreen() {
   ];
 
   const [animalGerado, setAnimalGerado] = useState({});
-  
 
   function animal() {
-
-    const indice = Math.floor(Math.random() * animais.length) ;
-    console.log(indice)
-    setAnimalGerado(animais[indice])
-    
+    const indice = Math.floor(Math.random() * animais.length);
+    setAnimalGerado(animais[indice]);
   }
 
   return (
-   <View>
-    <Card  style={{ margin: 10 }}>
-      <Card.Content>
-        {animalGerado && (
-          <Text variant="displaySmall" style={{textAlign:"center"}}>Animal: {animalGerado.nome}</Text>
-        )}
-        <Card.Cover source={{uri: animalGerado.imagem}}/>
+    <View style={styles.container}>
+      <Card style={styles.card}>
+        <Card.Content>
+          {animalGerado?.nome && (
+            <Text variant="displaySmall" style={styles.titulo}>
+              Animal: {animalGerado.nome}
+            </Text>
+          )}
+        </Card.Content>
 
-      </Card.Content>
-      <Card.Actions>
-        <Button onPress={animal}> Sortear Animal</Button>
-      </Card.Actions>
-    </Card>
-   </View>
+        {animalGerado?.imagem && (
+          <Card.Cover
+            source={{ uri: animalGerado.imagem }}
+            style={styles.imagem}
+            resizeMode="cover"
+          />
+        )}
+
+        <Card.Actions style={styles.botoes}>
+          <Button mode="contained" onPress={animal}>
+            Sortear Animal
+          </Button>
+        </Card.Actions>
+      </Card>
+    </View>
   );
 }
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {
+    padding: 16,
+    backgroundColor: "#FAFAFA",
+    flex: 1,
+    justifyContent: "center",
+  },
+  card: {
+    borderRadius: 12,
+    overflow: "hidden",
+    elevation: 4,
+    backgroundColor: "#FFFFFF",
+  },
+  titulo: {
+    textAlign: "center",
+    marginBottom: 10,
+    color: "#2E7D32",
+  },
+  imagem: {
+    width: "100%",
+    height: 300,
+    borderRadius: 0,
+    marginTop: 8,
+  },
+  botoes: {
+    justifyContent: "center",
+    paddingBottom: 10,
+    paddingTop: 5,
+  },
+});

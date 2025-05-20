@@ -47,7 +47,7 @@ export default function App() {
               },
               tabBarInactiveBackgroundColor: 'black',
               tabBarActiveBackgroundColor: 'blue',
-               tabBarIcon: ({color, size}) => <Ionicons name='megaphone-outline' color={color} size={size} />
+               tabBarIcon: ({color, size}) => <Ionicons name='paw-outline' color={color} size={size} />
 
            
            }}
