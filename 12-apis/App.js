@@ -1,5 +1,6 @@
 
 import { StyleSheet, Text, View } from 'react-native';
+
 import { NavigationContainer } from '@react-navigation/native';
 import { PaperProvider } from 'react-native-paper';
 import StackRoutes from './src/routes/StackRoutes';
