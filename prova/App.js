@@ -1,4 +1,3 @@
-// App.js
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -8,7 +7,8 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 import MapaScreen from './src/screens/MapaScreen';
 import RelatarScreen from './src/screens/RelatarScreen';
-// (você pode adicionar OcorrenciasScreen e DetalhesScreen depois)
+import OcorrenciasScreen from './src/screens/OcorrenciasScreen.jsx';
+// (você pode adicionar DetalhesScreen depois)
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -40,7 +40,16 @@ function Tabs() {
           ),
         }}
       />
-      {/* Adicione aqui a tela Ocorrencias depois */}
+
+      <Tab.Screen
+  name="Ocorrencias"
+  component={OcorrenciasScreen}
+  options={{
+    tabBarIcon: ({ color, size }) => (
+      <MaterialCommunityIcons name="clipboard-text" color={color} size={size} />
+    ),
+  }}
+/>
     </Tab.Navigator>
   );
 }

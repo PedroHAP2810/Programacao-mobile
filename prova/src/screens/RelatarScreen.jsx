@@ -1,125 +1,195 @@
-// src/screens/RelatarScreen.jsx
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Alert } from 'react-native';
-import { TextInput, Button, Text, HelperText, Menu, Divider } from 'react-native-paper';
+import { View, StyleSheet, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
+import { TextInput, Button, HelperText } from 'react-native-paper';
+import { useForm, Controller } from 'react-hook-form';
+import DateTimePicker from '@react-native-community/datetimepicker';
 import * as Location from 'expo-location';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import uuid from 'react-native-uuid';
 
-const categorias = ['Buraco', 'Alagamento', 'Animal Perdido', 'Vazamento', 'Outro'];
+export default function RelatarScreen() {
+  const { control, handleSubmit, formState: { errors }, setValue, reset } = useForm();
+  const [showPicker, setShowPicker] = useState(false);
 
-const RelatarScreen = () => {
-  const [titulo, setTitulo] = useState('');
-  const [descricao, setDescricao] = useState('');
-  const [categoria, setCategoria] = useState('');
-  const [menuVisible, setMenuVisible] = useState(false);
-  const [localizacao, setLocalizacao] = useState(null);
-
+  // Pega localização do usuário
   useEffect(() => {
-    obterLocalizacao();
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        alert('Permissão para acessar localização negada!');
+        return;
+      }
+      let location = await Location.getCurrentPositionAsync({});
+      setValue('localizacao', {
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+      });
+    })();
   }, []);
 
-  const obterLocalizacao = async () => {
-    const { status } = await Location.requestForegroundPermissionsAsync();
-    if (status !== 'granted') {
-      Alert.alert('Permissão negada', 'A localização é necessária para o relato.');
-      return;
+  const onSubmit = async (data) => {
+    try {
+      const novoRelato = {
+        id: uuid.v4(),
+        ...data,
+      };
+
+      const jsonSalvo = await AsyncStorage.getItem('ocorrencias');
+      const ocorrencias = jsonSalvo ? JSON.parse(jsonSalvo) : [];
+
+      ocorrencias.push(novoRelato);
+
+      await AsyncStorage.setItem('ocorrencias', JSON.stringify(ocorrencias));
+
+      alert('Relato salvo com sucesso!');
+      reset({
+  localizacao: data.localizacao,
+});
+    } catch (error) {
+      console.error('Erro ao salvar:', error);
+      alert('Erro ao salvar o relato.');
     }
-
-    const location = await Location.getCurrentPositionAsync({});
-    setLocalizacao({
-      latitude: location.coords.latitude,
-      longitude: location.coords.longitude,
-    });
-  };
-
-  const handleEnviar = () => {
-    if (!titulo || !descricao || !categoria || !localizacao) {
-      Alert.alert('Erro', 'Preencha todos os campos.');
-      return;
-    }
-
-    const novoRelato = {
-      id: Date.now().toString(),
-      titulo,
-      descricao,
-      categoria,
-      localizacao,
-      data: new Date().toISOString(),
-    };
-
-    console.log('Relato enviado:', novoRelato);
-    Alert.alert('Sucesso', 'Relato enviado com sucesso!');
-    // Aqui depois você pode salvar no Firebase ou AsyncStorage
-    setTitulo('');
-    setDescricao('');
-    setCategoria('');
   };
 
   return (
-    <View style={styles.container}>
-      <TextInput
-        label="Título"
-        value={titulo}
-        onChangeText={setTitulo}
-        mode="outlined"
-        style={styles.input}
-      />
-      <TextInput
-        label="Descrição"
-        value={descricao}
-        onChangeText={setDescricao}
-        multiline
-        mode="outlined"
-        style={styles.input}
-      />
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : null}
+      style={{ flex: 1 }}
+    >
+      <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
 
-      <Menu
-        visible={menuVisible}
-        onDismiss={() => setMenuVisible(false)}
-        anchor={
-          <Button
-            mode="outlined"
-            onPress={() => setMenuVisible(true)}
-            style={styles.input}
-          >
-            {categoria ? categoria : 'Selecione a Categoria'}
-          </Button>
-        }
-      >
-        {categorias.map((item) => (
-          <Menu.Item
-            key={item}
-            onPress={() => {
-              setCategoria(item);
-              setMenuVisible(false);
-            }}
-            title={item}
-          />
-        ))}
-      </Menu>
+        {/* Título */}
+        <Controller
+          control={control}
+          name="titulo"
+          rules={{ required: 'Título é obrigatório' }}
+          render={({ field: { onChange, onBlur, value } }) => (
+            <TextInput
+              label="Título"
+              mode="outlined"
+              onBlur={onBlur}
+              onChangeText={onChange}
+              value={value}
+              error={!!errors.titulo}
+              style={styles.input}
+            />
+          )}
+        />
+        <HelperText type="error" visible={!!errors.titulo}>
+          {errors.titulo?.message}
+        </HelperText>
 
-      <Button
-        mode="contained"
-        onPress={handleEnviar}
-        style={styles.botao}
-        disabled={!titulo || !descricao || !categoria}
-      >
-        Enviar Relato
-      </Button>
-    </View>
+        {/* Categoria */}
+        <Controller
+          control={control}
+          name="categoria"
+          rules={{ required: 'Categoria é obrigatória' }}
+          render={({ field: { onChange, onBlur, value } }) => (
+            <TextInput
+              label="Categoria"
+              mode="outlined"
+              onBlur={onBlur}
+              onChangeText={onChange}
+              value={value}
+              placeholder="Ex: Trânsito, Segurança"
+              error={!!errors.categoria}
+              style={styles.input}
+            />
+          )}
+        />
+        <HelperText type="error" visible={!!errors.categoria}>
+          {errors.categoria?.message}
+        </HelperText>
+
+        {/* Descrição */}
+        <Controller
+          control={control}
+          name="descricao"
+          rules={{ required: 'Descrição é obrigatória' }}
+          render={({ field: { onChange, onBlur, value } }) => (
+            <TextInput
+              label="Descrição"
+              mode="outlined"
+              multiline
+              numberOfLines={4}
+              onBlur={onBlur}
+              onChangeText={onChange}
+              value={value}
+              error={!!errors.descricao}
+              style={styles.input}
+            />
+          )}
+        />
+        <HelperText type="error" visible={!!errors.descricao}>
+          {errors.descricao?.message}
+        </HelperText>
+
+        {/* Data e Hora */}
+        <Controller
+          control={control}
+          name="data"
+          rules={{ required: 'Data e hora são obrigatórias' }}
+          render={({ field: { onChange, value }, fieldState: { error } }) => (
+            <View style={{ marginBottom: 8 }}>
+              <TextInput
+                label="Data e Hora"
+                mode="outlined"
+                value={value ? value.toLocaleString() : ''}
+                onFocus={() => setShowPicker(true)}
+                showSoftInputOnFocus={false}
+                error={!!error}
+                style={styles.input}
+              />
+              {error && <HelperText type="error">{error.message}</HelperText>}
+              {showPicker && (
+                <DateTimePicker
+                  value={value || new Date()}
+                  mode="datetime"
+                  display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+                  onChange={(event, selectedDate) => {
+                    setShowPicker(false);
+                    if (selectedDate) onChange(selectedDate);
+                  }}
+                />
+              )}
+            </View>
+          )}
+        />
+
+        {/* Localização */}
+        <Controller
+          control={control}
+          name="localizacao"
+          rules={{ required: 'Localização é obrigatória' }}
+          render={({ field: { value } }) => (
+            <TextInput
+              label="Localização (lat, lng)"
+              mode="outlined"
+              value={value ? `${value.latitude.toFixed(4)}, ${value.longitude.toFixed(4)}` : ''}
+              disabled
+              style={styles.input}
+            />
+          )}
+        />
+        <HelperText type="error" visible={!!errors.localizacao}>
+          {errors.localizacao?.message}
+        </HelperText>
+
+        <Button mode="contained" onPress={handleSubmit(onSubmit)} style={{ marginTop: 16 }}>
+          Enviar Relato
+        </Button>
+
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
     padding: 16,
-    flex: 1,
+    paddingTop: 45,
   },
   input: {
-    marginBottom: 12,
-  },
-  botao: {
-    marginTop: 20,
+    marginBottom: 8,
   },
 });
-
-export default RelatarScreen;

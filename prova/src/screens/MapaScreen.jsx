@@ -58,7 +58,7 @@ const MapaScreen = () => {
       )}
       <IconButton
         icon="crosshairs-gps"
-        size={30}
+        size={50}
         style={styles.botaoGPS}
         onPress={obterLocalizacao}
       />
