@@ -3,24 +3,15 @@ import { View, StyleSheet, Alert } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
 import { IconButton } from 'react-native-paper';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const MapaScreen = () => {
   const [localizacao, setLocalizacao] = useState(null);
-  const [relatos, setRelatos] = useState([
-    {
-      id: '1',
-      titulo: 'Buraco na Rua',
-      coordenadas: { latitude: -15.807796, longitude: -48.125823 },
-    },
-    {
-      id: '2',
-      titulo: 'Animal Perdido',
-      coordenadas: { latitude: -15.795139, longitude: -48.117037 },
-    },
-  ]);
+  const [relatos, setRelatos] = useState([]);
 
   useEffect(() => {
     obterLocalizacao();
+    carregarRelatos();
   }, []);
 
   const obterLocalizacao = async () => {
@@ -43,6 +34,16 @@ const MapaScreen = () => {
     }
   };
 
+  const carregarRelatos = async () => {
+    try {
+      const dados = await AsyncStorage.getItem('ocorrencias');
+      const lista = dados ? JSON.parse(dados) : [];
+      setRelatos(lista);
+    } catch (error) {
+      console.error('Erro ao carregar relatos do AsyncStorage:', error);
+    }
+  };
+
   return (
     <View style={styles.container}>
       {localizacao && (
@@ -50,8 +51,10 @@ const MapaScreen = () => {
           {relatos.map((relato) => (
             <Marker
               key={relato.id}
-              coordinate={relato.coordenadas}
+              coordinate={relato.localizacao}
               title={relato.titulo}
+              description={relato.descricao}
+              pinColor="red"
             />
           ))}
         </MapView>

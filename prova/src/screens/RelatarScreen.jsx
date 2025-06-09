@@ -11,7 +11,6 @@ export default function RelatarScreen() {
   const { control, handleSubmit, formState: { errors }, setValue, reset } = useForm();
   const [showPicker, setShowPicker] = useState(false);
 
-  // Pega localização do usuário
   useEffect(() => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
@@ -41,10 +40,16 @@ export default function RelatarScreen() {
 
       await AsyncStorage.setItem('ocorrencias', JSON.stringify(ocorrencias));
 
+      console.log('Salvo:', JSON.stringify(ocorrencias, null, 2));
+
+
       alert('Relato salvo com sucesso!');
+
+      // Limpa os campos, mantendo a localização atual
       reset({
-  localizacao: data.localizacao,
-});
+        localizacao: data.localizacao,
+      });
+
     } catch (error) {
       console.error('Erro ao salvar:', error);
       alert('Erro ao salvar o relato.');
@@ -187,7 +192,6 @@ export default function RelatarScreen() {
 const styles = StyleSheet.create({
   container: {
     padding: 16,
-    paddingTop: 45,
   },
   input: {
     marginBottom: 8,

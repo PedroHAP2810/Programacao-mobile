@@ -8,7 +8,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import MapaScreen from './src/screens/MapaScreen';
 import RelatarScreen from './src/screens/RelatarScreen';
 import OcorrenciasScreen from './src/screens/OcorrenciasScreen.jsx';
-// (você pode adicionar DetalhesScreen depois)
+import DetalhesOcorrenciaScreen from './src/screens/DetalhesOcorrenciaScreen'; // IMPORTAÇÃO DA NOVA TELA
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -42,14 +42,14 @@ function Tabs() {
       />
 
       <Tab.Screen
-  name="Ocorrencias"
-  component={OcorrenciasScreen}
-  options={{
-    tabBarIcon: ({ color, size }) => (
-      <MaterialCommunityIcons name="clipboard-text" color={color} size={size} />
-    ),
-  }}
-/>
+        name="Ocorrencias"
+        component={OcorrenciasScreen}
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons name="clipboard-text" color={color} size={size} />
+          ),
+        }}
+      />
     </Tab.Navigator>
   );
 }
@@ -65,8 +65,12 @@ export default function App() {
             component={Tabs}
             options={{ headerShown: false }}
           />
-          {/* Aqui você pode adicionar detalhes do relato, por exemplo */}
-          {/* <Stack.Screen name="Detalhes" component={DetalhesScreen} /> */}
+          {/* Tela de detalhes está fora do Tab Navigator para ser aberta por navegação stack */}
+          <Stack.Screen
+            name="DetalhesOcorrencia"
+            component={DetalhesOcorrenciaScreen}
+            options={{ title: 'Detalhes da Ocorrência' }}
+          />
         </Stack.Navigator>
       </NavigationContainer>
     </PaperProvider>

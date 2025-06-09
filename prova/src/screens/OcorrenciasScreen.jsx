@@ -1,70 +1,89 @@
-import React, { useState } from 'react';
-import { FlatList, View, StyleSheet } from 'react-native';
-import { List, Text, Divider } from 'react-native-paper';
+import React, { useState, useCallback } from 'react';
+import { View, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
+import { Card, Title, Paragraph, ActivityIndicator, Text } from 'react-native-paper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useFocusEffect } from '@react-navigation/native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 
-const OcorrenciasScreen = () => {
-  const [relatos, setRelatos] = useState([]);
+export default function OcorrenciasScreen() {
+  const [ocorrencias, setOcorrencias] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const navigation = useNavigation();
 
   useFocusEffect(
-    React.useCallback(() => {
-      const carregarRelatos = async () => {
+    useCallback(() => {
+      const carregarOcorrencias = async () => {
+        setLoading(true);
         try {
-          const dados = await AsyncStorage.getItem('relatos');
+          const dados = await AsyncStorage.getItem('ocorrencias');
           const lista = dados ? JSON.parse(dados) : [];
-          setRelatos(lista.reverse());
+
+          console.log('Carregado:', lista);
+          
+          setOcorrencias(lista.reverse()); // Ocorrências mais recentes primeiro
         } catch (error) {
-          console.error('Erro ao carregar relatos:', error);
+          console.error('Erro ao carregar ocorrências:', error);
+        } finally {
+          setLoading(false);
         }
       };
 
-      carregarRelatos();
+      carregarOcorrencias();
     }, [])
   );
 
-const renderItem = ({ item }) => (
-  <View>
-    <List.Item
-      title={item.titulo}
-      description={`${item.categoria} - ${new Date(item.data).toLocaleString()}`}
-      left={props => <List.Icon {...props} icon="alert-circle-outline" />}
-      right={props => (
-        <Text style={{ alignSelf: 'center', marginRight: 8 }}>
-          {item.localizacao
-            ? `Lat: ${item.localizacao.latitude.toFixed(4)}, Lng: ${item.localizacao.longitude.toFixed(4)}`
-            : 'Localização não disponível'}
-        </Text>
-      )}
-    />
-    <Divider />
-  </View>
-);
+  if (loading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator animating={true} size="large" />
+      </View>
+    );
+  }
+
+  if (ocorrencias.length === 0) {
+    return (
+      <View style={styles.container}>
+        <Text>Nenhuma ocorrência registrada ainda.</Text>
+      </View>
+    );
+  }
 
   return (
-    <SafeAreaView style={styles.container}>
-      <FlatList
-        data={relatos}
-        keyExtractor={item => item.id}
-        renderItem={renderItem}
-        ListEmptyComponent={<Text style={styles.vazio}>Nenhuma ocorrência registrada ainda.</Text>}
-      />
-    </SafeAreaView>
+    <FlatList
+      contentContainerStyle={styles.container}
+      data={ocorrencias}
+      keyExtractor={(item) => item.id.toString()}
+      renderItem={({ item }) => (
+        <TouchableOpacity
+          onPress={() => navigation.navigate('DetalhesOcorrencia', { ocorrencia: item })}
+        >
+          <Card style={styles.card}>
+            <Card.Content>
+              <Title>{item.titulo}</Title>
+              <Paragraph><Text style={styles.label}>Categoria:</Text> {item.categoria}</Paragraph>
+              <Paragraph><Text style={styles.label}>Descrição:</Text> {item.descricao}</Paragraph>
+              <Paragraph><Text style={styles.label}>Data:</Text> {new Date(item.data).toLocaleString()}</Paragraph>
+              <Paragraph><Text style={styles.label}>Localização:</Text> {item.localizacao.latitude.toFixed(4)}, {item.localizacao.longitude.toFixed(4)}</Paragraph>
+            </Card.Content>
+          </Card>
+        </TouchableOpacity>
+      )}
+    />
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    padding: 12,
+    padding: 16,
   },
-  vazio: {
-    marginTop: 40,
-    textAlign: 'center',
-    fontSize: 16,
-    color: '#999',
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  card: {
+    marginBottom: 16,
+  },
+  label: {
+    fontWeight: 'bold',
   },
 });
-
-export default OcorrenciasScreen;
