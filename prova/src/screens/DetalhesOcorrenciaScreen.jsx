@@ -9,10 +9,8 @@ const DetalhesOcorrenciaScreen = ({ route, navigation }) => {
   const [titulo, setTitulo] = useState(ocorrencia.titulo);
   const [descricao, setDescricao] = useState(ocorrencia.descricao);
   const [categoria, setCategoria] = useState(ocorrencia.categoria);
-  // Adicione outros campos que você tenha
   const [localizacao, setLocalizacao] = useState(ocorrencia.localizacao);
 
-  // Função para salvar alterações
   const salvarAlteracoes = async () => {
     try {
       const dados = await AsyncStorage.getItem('ocorrencias');
@@ -39,7 +37,6 @@ const DetalhesOcorrenciaScreen = ({ route, navigation }) => {
     }
   };
 
-  // Função para excluir a ocorrência
   const excluirOcorrencia = async () => {
     try {
       const dados = await AsyncStorage.getItem('ocorrencias');
@@ -76,7 +73,6 @@ const DetalhesOcorrenciaScreen = ({ route, navigation }) => {
         onChangeText={setCategoria}
         style={styles.input}
       />
-      {/* Adicione outros inputs conforme necessário */}
 
       <Button mode="contained" onPress={salvarAlteracoes} style={styles.botao}>
         Salvar Alterações

@@ -45,7 +45,6 @@ export default function RelatarScreen() {
 
       alert('Relato salvo com sucesso!');
 
-      // Limpa os campos, mantendo a localização atual
      reset({
     titulo: '',
     categoria: '',
@@ -67,7 +66,6 @@ export default function RelatarScreen() {
     >
       <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
 
-        {/* Título */}
         <Controller
           control={control}
           name="titulo"
@@ -88,7 +86,6 @@ export default function RelatarScreen() {
           {errors.titulo?.message}
         </HelperText>
 
-        {/* Categoria */}
         <Controller
           control={control}
           name="categoria"
@@ -110,7 +107,6 @@ export default function RelatarScreen() {
           {errors.categoria?.message}
         </HelperText>
 
-        {/* Descrição */}
         <Controller
           control={control}
           name="descricao"
@@ -133,7 +129,6 @@ export default function RelatarScreen() {
           {errors.descricao?.message}
         </HelperText>
 
-        {/* Data e Hora */}
         <Controller
           control={control}
           name="data"

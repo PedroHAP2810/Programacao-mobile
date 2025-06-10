@@ -8,12 +8,11 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import MapaScreen from './src/screens/MapaScreen';
 import RelatarScreen from './src/screens/RelatarScreen';
 import OcorrenciasScreen from './src/screens/OcorrenciasScreen.jsx';
-import DetalhesOcorrenciaScreen from './src/screens/DetalhesOcorrenciaScreen'; // IMPORTAÇÃO DA NOVA TELA
+import DetalhesOcorrenciaScreen from './src/screens/DetalhesOcorrenciaScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
-// Tabs principais
 function Tabs() {
   return (
     <Tab.Navigator
@@ -54,7 +53,6 @@ function Tabs() {
   );
 }
 
-// Navegação principal
 export default function App() {
   return (
     <PaperProvider>
@@ -65,7 +63,7 @@ export default function App() {
             component={Tabs}
             options={{ headerShown: false }}
           />
-          {/* Tela de detalhes está fora do Tab Navigator para ser aberta por navegação stack */}
+          
           <Stack.Screen
             name="DetalhesOcorrencia"
             component={DetalhesOcorrenciaScreen}

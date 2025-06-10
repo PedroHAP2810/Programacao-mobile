@@ -19,7 +19,7 @@ export default function OcorrenciasScreen() {
 
           console.log('Carregado:', lista);
           
-          setOcorrencias(lista.reverse()); // Ocorrências mais recentes primeiro
+          setOcorrencias(lista.reverse()); 
         } catch (error) {
           console.error('Erro ao carregar ocorrências:', error);
         } finally {
