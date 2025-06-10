@@ -59,7 +59,7 @@ export default function App() {
       <NavigationContainer>
         <Stack.Navigator>
           <Stack.Screen
-            name="Home"
+            name="Voltar"
             component={Tabs}
             options={{ headerShown: false }}
           />
