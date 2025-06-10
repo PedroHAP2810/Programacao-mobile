@@ -4,15 +4,20 @@ import MapView, { Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
 import { IconButton } from 'react-native-paper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useFocusEffect } from '@react-navigation/native';
+import { useCallback } from 'react';
+
 
 const MapaScreen = () => {
   const [localizacao, setLocalizacao] = useState(null);
   const [relatos, setRelatos] = useState([]);
 
-  useEffect(() => {
+useFocusEffect(
+  useCallback(() => {
     obterLocalizacao();
     carregarRelatos();
-  }, []);
+  }, [])
+);
 
   const obterLocalizacao = async () => {
     try {

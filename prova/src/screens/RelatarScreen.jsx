@@ -46,9 +46,13 @@ export default function RelatarScreen() {
       alert('Relato salvo com sucesso!');
 
       // Limpa os campos, mantendo a localização atual
-      reset({
-        localizacao: data.localizacao,
-      });
+     reset({
+    titulo: '',
+    categoria: '',
+    descricao: '',
+    data: null,
+    localizacao: data.localizacao, 
+});
 
     } catch (error) {
       console.error('Erro ao salvar:', error);
@@ -192,6 +196,7 @@ export default function RelatarScreen() {
 const styles = StyleSheet.create({
   container: {
     padding: 16,
+    paddingTop: 45,
   },
   input: {
     marginBottom: 8,
